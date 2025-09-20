@@ -1,2 +1,4 @@
 *
 !.gitignore
+!vnwa_setup/
+!vnwa_setup/**/*

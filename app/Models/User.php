@@ -6,11 +6,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Storage;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use HasRoles;
+    use HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -18,6 +22,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'url_avatar',
         'name',
         'email',
         'password',
@@ -29,10 +34,20 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'id',
+        'email_verified_at',
         'password',
         'remember_token',
     ];
-
+    protected $appends = [
+        'profile_photo_url',
+    ];
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->avatar
+                    ? Storage::url($this->avatar)
+                    : 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=7F9CF5&background=EBF4FF';
+    }
     /**
      * Get the attributes that should be cast.
      *
