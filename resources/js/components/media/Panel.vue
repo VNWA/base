@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-[1000px] h-[600px] bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-300 dark:border-gray-700 flex flex-col">
+        class="w-[80vw] h-[80vh] bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-300 dark:border-gray-700 flex flex-col">
         <!-- Header -->
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">

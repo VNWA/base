@@ -6,7 +6,7 @@
         </label>
 
         <!-- Input -->
-        <input :id="id" ref="input" :value="modelValue"
+        <input :id="id" ref="input" :value="modelValue" :type="type || 'text'"
             @input="$emit('update:modelValue', ($event.target as HTMLInputElement)?.value)" :class="inputClasses"
             :placeholder="placeholder"
             class="rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all duration-200" />
@@ -31,6 +31,7 @@ const props = defineProps<{
     autofocus?: boolean;
     placeholder?: string;
     size?: InputSize;
+    type?: 'number' | 'text' | 'email'
 }>()
 
 defineEmits(['update:modelValue']);

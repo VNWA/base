@@ -6,17 +6,17 @@
         </label>
 
         <!-- Wrapper -->
-        <div class="w-40 h-48 border rounded-lg overflow-hidden" :class="[
+        <div class="w-full   border rounded-lg overflow-hidden" :class="[
             error
                 ? 'border-red-500 dark:border-red-400'
                 : 'border-gray-300 dark:border-gray-600',
             'bg-white dark:bg-gray-800'
         ]">
             <!-- Image button -->
-            <button type="button" @click="open" class="w-40 h-40 flex items-center justify-center overflow-hidden
+            <button type="button" @click="open" class="w-full h-full min-h-32 flex items-center justify-center overflow-hidden
                  bg-gray-50 dark:bg-gray-700
                  hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                <img v-if="modelValue" :src="storage(modelValue)" class="object-cover w-full h-full" />
+                <img v-if="modelValue" :src="storage(modelValue)" class="object-cover max-w-32 w-full h-auto" />
                 <Icon v-else icon="radix-icons:image" class="text-gray-400 dark:text-gray-300 text-4xl" />
             </button>
 

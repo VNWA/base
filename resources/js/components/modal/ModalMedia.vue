@@ -16,6 +16,8 @@ const success = (items: Media[]) => {
 
 <template>
     <LayoutModal title="VMedia">
-        <Panel :types="types" :isChoose="true" @choose="success" @close="emit('close')" />
+   <template #content>
+         <Panel :types="types" :isChoose="true" @choose="success" @close="emit('close')" />
+   </template>
     </LayoutModal>
 </template>

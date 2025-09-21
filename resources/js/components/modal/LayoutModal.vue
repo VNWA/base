@@ -23,7 +23,10 @@ function close() {
 
 <template>
     <VueFinalModal class="flex justify-center items-center no_close_selected" :modal-id="modalId">
-        <div :class="[
+        <div v-if="$slots.content">
+            <slot name="content" />
+        </div>
+        <div v-else :class="[
             'flex flex-col bg-white dark:bg-gray-900 border dark:border-gray-700 shadow-lg divide-y divide-gray-200 dark:divide-gray-700',
             props.size === 'base'
                 ? 'w-[110vh] mx-4  rounded-lg'

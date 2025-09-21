@@ -51,7 +51,7 @@
 
   const variant = props.variant || 'solid';
   const color = props.color || 'blue';
-  const size = props.size || 'md';
+  const size = props.size || 'sm';
 
   // Sizes
   const sizes: Record<ButtonSize, string> = {

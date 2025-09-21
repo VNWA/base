@@ -55,11 +55,13 @@ export interface Media {
 
 
 export interface ProductAppend {
-    delivery_and_returns: string[];
+    delivery_and_returns: string;
     specification: string
 }
 export interface Product {
     id?: number;
+    brand_id:number | null
+    category_ids:number[]
     url_avatar: string;
     images: string[];
     sku: string
@@ -69,6 +71,8 @@ export interface Product {
     slug: string
     description?: string
     append: ProductAppend
+    price:number
+    price_old:number
     meta: Meta
     created_at?: string; // hoặc Date nếu bạn convert khi fetch
     updated_at?: string; // hoặc Date

@@ -43,6 +43,9 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
                 Route::post('/list', 'list')->name('list');
                 Route::get('/create', 'create')->name('create');
                 Route::get('/edit-{id}', 'edit')->name('edit');
+                Route::post('/store', 'store')->name('store');
+                Route::post('/update-{id}', 'update')->name('update');
+
             });
             Route::prefix('category')->name('category.')->controller(ProductCategoryController::class)->group(function () {
                 Route::get('/', 'index')->name('index');
