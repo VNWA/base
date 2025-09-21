@@ -1,24 +1,21 @@
 <template>
     <div class="flex flex-col w-full">
       <!-- Label -->
-      <label v-if="label" class="mb-1 text-sm font-medium text-gray-700 capitalize dark:text-gray-300">
+      <label v-if="label" :for="id" class="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
         {{ label }}
       </label>
 
       <!-- Select -->
-      <Select multiple v-model="ids" class="w-full">
-        <SelectTrigger :class="triggerClasses">
-          <SelectValue placeholder="Select data" />
-        </SelectTrigger>
-
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem v-for="(item, index) in items" :key="index" :value="item.value">
-              {{ item.label }}
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <select
+        :id="id"
+        :value="modelValue"
+        @change="onChange"
+        :class="selectClasses"
+      >
+        <option v-for="(item, index) in items" :key="index" :value="item.value">
+          {{ item.label }}
+        </option>
+      </select>
 
       <!-- Error message -->
       <p v-if="error" class="mt-1 text-xs text-red-600 dark:text-red-400">
@@ -28,78 +25,51 @@
   </template>
 
   <script lang="ts" setup>
-  import { onMounted, ref, watch, computed } from 'vue';
-  import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
-  import axios from 'axios';
+  import { ref, computed } from 'vue'
+  import { useId } from 'reka-ui'
 
-  interface T {
-    label: string;
-    value: number;
+  type InputSize = 'sm' | 'md' | 'lg'
+
+  interface Option {
+    label: string
+    value: string | number
   }
 
+  const id = useId()
+
   const props = defineProps<{
-    modelValue: number[];
-    label?: string;
-    data_url: string;
-    error?: string;
-    size?: 'sm' | 'md' | 'lg';
+    modelValue: string | number
+    items: Option[]
+    label?: string
+    error?: string
+    size?: InputSize
   }>()
 
   const emit = defineEmits<{
-    (e: 'update:modelValue', value: number[]): void
+    (e: 'update:modelValue', value: string | number): void
   }>()
 
-  const ids = ref<number[]>([...props.modelValue]);
-
-  watch(() => props.modelValue, val => {
-    if (JSON.stringify(val) !== JSON.stringify(ids.value)) {
-      ids.value = [...val];
-    }
-  }, { immediate: true });
-
-  watch(ids, val => emit('update:modelValue', val), { deep: true });
-
-  const loading = ref(true);
-  const items = ref<T[]>([]);
-
-  const load = async () => {
-    loading.value = true;
-    try {
-      const res = await axios.get(props.data_url);
-      items.value = res.data;
-    } catch (err) {
-      console.log(err);
-    } finally {
-      loading.value = false;
-    }
+  // Xử lý change event
+  const onChange = (e: Event) => {
+    const target = e.target as HTMLSelectElement | null
+    if (!target) return
+    emit('update:modelValue', target.value)
   }
 
-  onMounted(() => {
-    load();
-  })
+  // Map size => padding + height + font-size
+  const sizeClassesMap: Record<InputSize, string> = {
+    sm: 'px-2 py-1 text-sm h-8',
+    md: 'px-3 py-2 text-base h-10',
+    lg: 'px-4 py-3 text-lg h-12',
+  }
 
-  // CSS giống input field
-  const triggerClasses = computed(() => {
-    const sizeMap = {
-      sm: 'px-2 py-1 text-sm h-8',
-      md: 'px-3 py-2 text-base h-10',
-      lg: 'px-4 py-3 text-lg h-12',
-    };
-    const sizeCls = sizeMap[props.size || 'md'];
-
-    const border = props.error
+  // Lớp CSS chính
+  const selectClasses = computed(() => {
+    const sizeCls = sizeClassesMap[props.size || 'md']
+    const borderCls = props.error
       ? 'border-red-500 dark:border-red-400 focus:ring-red-500 dark:focus:ring-red-400'
-      : 'border border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400';
-
-    const bgText = 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100';
-
-    return `${sizeCls} ${border} ${bgText} rounded-md shadow-sm w-full focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all duration-200`;
-  });
+      : 'border border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400'
+    const bgText = 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100'
+    return `${sizeCls} ${borderCls} ${bgText} rounded-md shadow-sm w-full focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all duration-200`
+  })
   </script>

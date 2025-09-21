@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->longText('description')->nullable();
             $table->json('append');
+            $table->decimal('price', 12, 2)->default(0);
+            $table->decimal('price_old', 12, 2)->nullable();
             $table->text('meta_image')->nullable();
             $table->text('meta_title')->nullable();
             $table->text('meta_desc')->nullable();

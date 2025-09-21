@@ -3,9 +3,9 @@
         <VnwaPanel title="Products" :loading="loading" :isFilter="true">
             <template #form-filter>
                 <div class="grid grid-cols-3 gap-4">
-                    <SelectFild v-model="filter.categories" :data_url="route('vnwa.product.category.mini-option')"
+                    <OptionDataFild v-model="filter.categories" :data_url="route('vnwa.product.category.mini-option')"
                         label="Filter Categories" />
-                    <SelectFild v-model="filter.brands" :data_url="route('vnwa.product.brand.mini-option')"
+                    <OptionDataFild v-model="filter.brands" :data_url="route('vnwa.product.brand.mini-option')"
                         label="Filter Brands" />
                     <InputFild v-model="filter.name" label="Serach By Name" placeholder="Search" />
                 </div>
@@ -57,7 +57,7 @@ import Button from '@/components/Button.vue';
 import Layout from '@/layouts/Layout.vue';
 import VnwaPanel from '@/components/VnwaPanel.vue';
 import VnwaLink from '@/components/VnwaLink.vue';
-import SelectFild from '@/components/input/SelectFild.vue';
+import OptionDataFild from '@/components/input/OptionDataFild.vue';
 import InputFild from '@/components/input/InputFild.vue';
 
 

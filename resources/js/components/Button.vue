@@ -1,5 +1,5 @@
 <template>
-    <button
+    <button :type="type"
       :disabled="loading || disabled"
       :class="buttonClasses"
       class="flex items-center justify-center gap-2 font-medium rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -46,6 +46,7 @@
     variant?: ButtonVariant;
     color?: ButtonColor;
     size?: ButtonSize;
+    type?:'button'|'submit'
   }>();
 
   const variant = props.variant || 'solid';

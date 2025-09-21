@@ -13,7 +13,7 @@ const props = defineProps<{
 <template>
     <TooltipProvider>
         <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger as-child>
                 <slot />
             </TooltipTrigger>
             <TooltipContent>

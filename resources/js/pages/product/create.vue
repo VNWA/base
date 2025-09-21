@@ -1,10 +1,12 @@
 <template>
     <Layout title="Create Product">
-        <Card title="Create Product" :loading="loading">
-            <template #header>
-                <Button @click="submit" :loading="loading" label="Save" icon="material-symbols:save" color="indigo" />
-            </template>
-            <form>
+
+        <form @submit.prevent="submit">
+            <Card title="Create Product" :loading="loading">
+                <template #header>
+                    <Button type="button" :loading="loading" label="Save" icon="material-symbols:save"
+                        color="indigo" />
+                </template>
                 <div class="space-y-4">
 
                     <div class="grid grid-cols-12 gap-4">
@@ -17,17 +19,17 @@
                             <InputFild v-model="form.slug" label="slug" :error="form.errors.slug" />
                         </div>
                     </div>
-                    <TextareaField v-model="form.description" label="description" :error="form.errors.description" />
                     <div>
-                        <Editor v-model="form.description" />
+                        <Editor v-model="form.description" label="description" :error="form.errors.description" />
                     </div>
 
                     <MetaSeo v-model="form.meta" />
                 </div>
 
-            </form>
 
-        </Card>
+            </Card>
+        </form>
+
     </Layout>
 </template>
 
