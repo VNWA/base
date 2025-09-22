@@ -10,8 +10,8 @@ export interface NavItem {
     childs?: NavItemChild[]
 }
 export interface ItemConfirm {
-    value: String | Number;
-    label: String;
+    value: string | number;
+    label: string;
 }
 export interface Meta {
     title: string,

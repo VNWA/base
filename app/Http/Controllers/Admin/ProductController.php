@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\GenerateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -13,13 +16,24 @@ class ProductController extends Controller
     {
         return Inertia::render('product/list');
     }
+
     public function create()
     {
         return Inertia::render('product/create');
     }
+
     public function edit($id)
     {
-        return Inertia::render('product/edit');
+        $product = Product::find($id);
+        $product->brand_id = $product->product_brand_id;
+        $product->category_ids = $product->categories->pluck('id');
+        $product->meta = [
+            'title' => $product->meta_title ?? '',
+            'desc' => $product->meta_desc ?? '',
+            'image' => $product->meta_image ?? '',
+        ];
+
+        return Inertia::render('product/edit', ['product' => $product]);
     }
 
     public function list(Request $request)
@@ -36,16 +50,16 @@ class ProductController extends Controller
 
         // Lọc theo tên
         if ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
+            $query->where('name', 'like', '%'.$name.'%')->orWhere('sku', 'like', '%'.$name.'%');
         }
 
         // Lọc theo brands
-        if (!empty($brands)) {
+        if (! empty($brands)) {
             $query->whereIn('product_brand_id', $brands);
         }
 
         // Lọc theo categories
-        if (!empty($categories)) {
+        if (! empty($categories)) {
             $query->whereHas('categories', function ($q) use ($categories) {
                 $q->whereIn('product_categories.id', $categories);
             });
@@ -65,47 +79,6 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function loadDataCategoriesAndBrands()
-    {
-        try {
-            $categories = ProductCategory::get(['id', 'name']);
-            $brands = Brand::get(['id', 'name']);
-            return response()->json(['categories' => $categories, 'brands' => $brands], 200);
-        } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 500);
-        }
-    }
-    protected function getChildCategories($parentId)
-    {
-        // Lấy danh mục con của $parentId đã sắp xếp theo 'ord'
-        $children = ProductCategory::where('parent_id', $parentId)
-            ->orderBy('ord')
-            ->get(['id', 'parent_id', 'name', 'ord'])
-            ->map(function ($category) {
-                // Đệ quy lấy danh mục con của danh mục hiện tại
-                $category->children = $this->getChildCategories($category->id);
-                return $category;
-            });
-
-        return $children;
-    }
-    public function loadDataCategoriesTreeAndBrands()
-    {
-        try {
-            $categories = ProductCategory::whereNull('parent_id')
-                ->orderBy('ord')
-                ->get(['id', 'parent_id', 'name', 'ord'])
-                ->map(function ($category) {
-                    // Đệ quy lấy danh mục con
-                    $category->children = $this->getChildCategories($category->id);
-                    return $category;
-                });
-            $brands = Brand::get(['id', 'name']);
-            return response()->json(['categories' => $categories, 'brands' => $brands], 200);
-        } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 500);
-        }
-    }
     public function loadDataTable(Request $request)
     {
         // Lấy các tham số từ request
@@ -126,17 +99,16 @@ class ProductController extends Controller
         }
 
         // Lọc theo danh mục nếu có
-        if (!empty($categoryIds)) {
+        if (! empty($categoryIds)) {
             $query->whereHas('categories', function ($q) use ($categoryIds) {
                 $q->whereIn('product_categories.id', $categoryIds); // Sửa chỗ này
             });
         }
-        if (!empty($brandIds)) {
+        if (! empty($brandIds)) {
             $query->whereHas('brand', function ($q) use ($brandIds) { // Dùng 'brand' (số ít)
                 $q->whereIn('brands.id', $brandIds); // Lọc theo brand IDs
             });
         }
-
 
         // Sắp xếp và phân trang
         $total = $query->count();
@@ -150,142 +122,190 @@ class ProductController extends Controller
             'last_page' => ceil($total / $perPage),
         ], 200);
     }
-    public function showEdit($id)
+
+    public function store(Request $request)
     {
-        $product = Product::with('categories')->find($id);
-        $categoriesId = $product->categories->pluck('id');
-        $product->categoriesId = $categoriesId;
+        $data = $request->all();
 
-        return Inertia::render('Admin/Ecommerce/Product/Edit', ['product' => $product]);
-
-    }
-
-    function stpre(Request $request)
-    {
-        $request->validate([
+        // Validate dữ liệu
+        $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:urls,slug',
-            'images' => 'required|array',
-            'images.*' => 'string',
+            'slug' => 'nullable|string|max:255|unique:products,slug',
+            'price' => 'required|numeric|min:0',
+            'price_old' => 'nullable|numeric|min:0',
+            'sku' => 'nullable|string|max:255|unique:products,sku',
+            'stock' => 'nullable|integer|min:0',
+            'brand_id' => 'nullable|exists:brands,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:product_categories,id',
+            'url_avatar' => 'nullable|string|max:255',
+            'images' => 'nullable|array',
+            'images.*' => 'string|max:255',
             'description' => 'nullable|string',
-            'tech_info' => 'nullable|string',
-            'brand_id' => 'required|integer|exists:brands,id',
-            'sku' => 'required|string',
-            'stock' => 'required|integer',
-            'origin' => 'required|string',
-            'seo_meta.meta_image' => 'nullable|string',
-            'seo_meta.meta_title' => 'nullable|string|max:255',
-            'seo_meta.meta_desc' => 'nullable|string|max:255',
-            'parentIds' => 'nullable|array',
-            'parentIds.*' => 'integer|exists:product_categories,id',
+            'append.delivery_and_returns' => 'nullable|string',
+            'append.specification' => 'nullable|string',
+            'meta.title' => 'nullable|string|max:255',
+            'meta.desc' => 'nullable|string|max:500',
+            'meta.image' => 'nullable|string|max:255',
         ]);
 
-        $data = [
-            'is_show' => $request->is_show ? 1 : 0,
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'images' => $request->images,
-            'description' => $request->description,
-            'tech_info' => $request->tech_info,
-            'brand_id' => $request->brand_id,
-            'sku' => $request->sku,
-            'stock' => $request->stock,
-            'origin' => $request->origin,
-            'catalogs' => $request->catalogs ?? [],
-            'meta_image' => $request->seo_meta['meta_image'] ?? null,
-            'meta_title' => $request->seo_meta['meta_title'] ?? null,
-            'meta_desc' => $request->seo_meta['meta_desc'] ?? null,
-        ];
-        DB::beginTransaction();
+        if ($validator->fails()) {
+            $errors = collect($validator->errors()->toArray())
+                ->map(fn ($messages) => $messages[0]) // lấy message đầu tiên
+                ->toArray();
 
-        try {
-            // Tạo product
-            $product = Product::create($data);
-
-            // Liên kết product với các danh mục
-            foreach ($request->parentIds as $parentId) {
-                ProductCategoryAssignment::create([
-                    'product_id' => $product->id,
-                    'product_category_id' => $parentId,
-                ]);
-            }
-            DB::commit();
-            return response()->json(['message' => 'Create Product Success'], 200);
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            \Log::error($th);
-
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json([
+                'message' => 'Data is invalid.',
+                'errors' => $errors,
+            ], 422);
         }
+
+        // Generate slug nếu không có
+        $data['slug'] = ! empty($data['slug'])
+            ? $data['slug']
+            : GenerateHelper::generateSlug($data['name'], 'products', 'slug');
+
+        // Generate SKU nếu không có
+        $data['sku'] = ! empty($data['sku'])
+            ? $data['sku']
+            : GenerateHelper::generateSku($data['name'], 'products', 'sku');
+
+        // Tạo product
+        $product = Product::create([
+            'name' => $data['name'],
+            'slug' => $data['slug'],
+            'price' => $data['price'],
+            'price_old' => $data['price_old'] ?? null,
+            'sku' => $data['sku'],
+            'stock' => $data['stock'] ?? 0,
+            'product_brand_id' => $data['brand_id'] ?? null,
+            'url_avatar' => $data['url_avatar'] ?? null,
+            'images' => $data['images'] ?? [],
+            'description' => $data['description'] ?? null,
+            'append' => $data['append'] ?? [],
+            'meta_title' => $data['meta']['title'] ?? null,
+            'meta_desc' => $data['meta']['desc'] ?? null,
+            'meta_image' => $data['meta']['image'] ?? null,
+        ]);
+
+        // Nếu có category_ids thì sync
+        if (! empty($data['category_ids'])) {
+            $product->categories()->sync($data['category_ids']);
+        }
+
+        return response()->json([
+            'message' => 'Product created successfully.',
+            'data' => $product,
+        ], 201);
     }
-    function update(Request $request, $id)
+
+    public function update(Request $request, $id)
     {
         $product = Product::find($id);
-        $request->validate([
+        if (! $product) {
+            return response()->json([
+                'message' => 'Product not found.',
+            ], 404);
+        }
+
+        $data = $request->all();
+
+        // Validate dữ liệu
+        $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:urls,slug,' . $product->url->id,
-            'images' => 'required|array',
-            'images.*' => 'string',
+            'slug' => 'nullable|string|max:255|unique:products,slug,'.$product->id,
+            'price' => 'required|numeric|min:0',
+            'price_old' => 'nullable|numeric|min:0',
+            'sku' => 'nullable|string|max:255|unique:products,sku,'.$product->id,
+            'stock' => 'nullable|integer|min:0',
+            'brand_id' => 'nullable|exists:product_brands,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:product_categories,id',
+            'url_avatar' => 'nullable|string|max:255',
+            'images' => 'nullable|array',
+            'images.*' => 'string|max:255',
             'description' => 'nullable|string',
-            'tech_info' => 'nullable|string',
-            'brand_id' => 'required|integer|exists:brands,id',
-            'sku' => 'required|string',
-            'stock' => 'required|integer',
-            'origin' => 'required|string',
-            'seo_meta.meta_image' => 'nullable|string',
-            'seo_meta.meta_title' => 'nullable|string|max:255',
-            'seo_meta.meta_desc' => 'nullable|string|max:255',
-            'parentIds' => 'nullable|array',
-            'parentIds.*' => 'integer|exists:product_categories,id',
+            'append.delivery_and_returns' => 'nullable|string',
+            'append.specification' => 'nullable|string',
+            'meta.title' => 'nullable|string|max:255',
+            'meta.desc' => 'nullable|string|max:500',
+            'meta.image' => 'nullable|string|max:255',
         ]);
 
-        $data = [
-            'is_show' => $request->is_show ? 1 : 0,
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'images' => $request->images,
-            'description' => $request->description,
-            'tech_info' => $request->tech_info,
-            'brand_id' => $request->brand_id,
-            'sku' => $request->sku,
-            'stock' => $request->stock,
-            'origin' => $request->origin,
-            'catalogs' => $request->catalogs ?? [],
-            // 'meta_image' => $request->seo_meta['meta_image'] ?? null,
-            // 'meta_title' => $request->seo_meta['meta_title'] ?? null,
-            // 'meta_desc' => $request->seo_meta['meta_desc'] ?? null,
-        ];
+        if ($validator->fails()) {
+            $errors = collect($validator->errors()->toArray())
+                ->map(fn ($messages) => $messages[0]) // lấy message đầu tiên
+                ->toArray();
+
+            return response()->json([
+                'message' => 'Data is invalid.',
+                'errors' => $errors,
+            ], 422);
+        }
+
+        // Generate slug nếu không có
+        $data['slug'] = ! empty($data['slug'])
+            ? $data['slug']
+            : GenerateHelper::generateSlug($data['name'], 'products', 'slug', $product->id);
+
+        // Generate SKU nếu không có
+        $data['sku'] = ! empty($data['sku'])
+            ? $data['sku']
+            : GenerateHelper::generateSku($data['name'], 'products', 'sku', $product->id);
+        // Cập nhật product
+        $product->update([
+            'name' => $data['name'],
+            'slug' => $data['slug'],
+            'price' => $data['price'],
+
+            'price_old' => $data['price_old'] ?? null,
+            'sku' => $data['sku'],
+            'stock' => $data['stock'] ?? 0,
+            'product_brand_id' => $data['brand_id'] ?? null,
+            'url_avatar' => $data['url_avatar'] ?? null,
+            'images' => $data['images'] ?? [],
+            'description' => $data['description'] ?? null,
+            'append' => $data['append'] ?? [],
+            'meta_title' => $data['meta']['title'] ?? null,
+            'meta_desc' => $data['meta']['desc'] ?? null,
+            'meta_image' => $data['meta']['image'] ?? null,
+        ]);
+        // Nếu có category_ids thì sync
+        if (isset($data['category_ids'])) {
+            $product->categories()->sync($data['category_ids']);
+            $product->load('categories');
+        }
+
+        return response()->json([
+            'message' => 'Product updated successfully.',
+            'data' => $product,
+        ], 200);
+    }
+
+    public function delete(Request $request)
+    {
+        $items = $request->validate([
+            '*.value' => 'required|exists:products,id',
+        ]);
+
         DB::beginTransaction();
 
         try {
-            // Tạo product
-            $product->update($data);
-            ProductCategoryAssignment::where('product_id', $id)->delete();
-
-            // Liên kết product với các danh mục
-            foreach ($request->parentIds as $parentId) {
-                ProductCategoryAssignment::create([
-                    'product_id' => $id,
-                    'product_category_id' => $parentId,
-                ]);
+            foreach ($items as $item) {
+                $i = Product::findOrFail($item['value']);
+                $i->delete();
             }
+
             DB::commit();
-            return response()->json(['message' => 'Update Product Success'], 200);
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            \Log::error($th);
 
-            return response()->json(['message' => $th->getMessage()], 500);
-        }
-    }
-    function delete(Request $request)
-    {
-
-        try {
-            Product::whereIn('id', $request->dataId)->delete();
-            return response()->json(['message' => 'Xóa dữ liệu thành công'], 200);
+            return response()->json(['message' => 'Remove Product  Success']);
         } catch (\Throwable $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Remove Product  Failed',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }

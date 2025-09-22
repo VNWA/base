@@ -14,16 +14,15 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
 
     Route::middleware('guest')->group(function () {
         Route::prefix('auth')->controller(AuthController::class)->name('auth.')->group(function () {
-            Route::get('/login', fn() => Inertia::render('login'))->name('login');
+            Route::get('/login', fn () => Inertia::render('login'))->name('login');
             Route::post('/login', 'login')->name('login');
 
         });
     });
 
-
     Route::middleware('admin')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-        Route::get('/', fn() => Inertia::render('dashboard'))->name('dashboard');
+        Route::get('/', fn () => Inertia::render('dashboard'))->name('dashboard');
         Route::prefix('media')->name('media.')->controller(MediaController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/load-data', 'loadData')->name('load-data');
@@ -35,7 +34,7 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
         });
 
         Route::prefix('user')->name('user.')->controller(UserController::class)->group(function () {
-            Route::get('/', fn() => Inertia::render('dashboard'))->name('list');
+            Route::get('/', fn () => Inertia::render('dashboard'))->name('list');
         });
         Route::prefix('product')->name('product.')->group(function () {
             Route::prefix('/')->controller(ProductController::class)->group(function () {
@@ -45,6 +44,8 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
                 Route::get('/edit-{id}', 'edit')->name('edit');
                 Route::post('/store', 'store')->name('store');
                 Route::post('/update-{id}', 'update')->name('update');
+                Route::post('delete', 'delete')
+                    ->name('delete');
 
             });
             Route::prefix('category')->name('category.')->controller(ProductCategoryController::class)->group(function () {
@@ -76,7 +77,6 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
                 Route::post('/update/{id}', 'update')->name('update');
                 Route::get('mini-option', 'options')->name('mini-option');
             });
-
 
         });
         Route::controller(ProfileController::class)->group(function () {

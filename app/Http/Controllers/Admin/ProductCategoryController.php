@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Str;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 class ProductCategoryController extends Controller
 {
     public function options()

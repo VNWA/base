@@ -88,3 +88,17 @@ export const generateSlug = (str: string) => {
     // return
     return str;
 }
+
+
+
+export const formatCurrency = (number: string | number | bigint): string => {
+  if (number === null || number === undefined) {
+    number = 0;
+  }
+  const value = Number(number);
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    minimumFractionDigits: 0,
+  }).format(value);
+};

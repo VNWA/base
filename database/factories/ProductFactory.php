@@ -19,13 +19,12 @@ class ProductFactory extends Factory
         return [
             'product_brand_id' => ProductBrand::factory(),
             'url_avatar'       => $this->faker->imageUrl(200, 200, 'product'),
-            'images'           => json_encode([
+            'images'           => [
                 $this->faker->imageUrl(600, 600, 'product'),
                 $this->faker->imageUrl(600, 600, 'product'),
-            ]),
+            ],
             'sku'              => strtoupper($this->faker->bothify('SKU-#####')),
             'stock'            => $this->faker->numberBetween(0, 500),
-            'origin'           => $this->faker->country,
             'name'             => $name,
             'slug'             => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 10000),
             'description'      => $this->faker->paragraph,

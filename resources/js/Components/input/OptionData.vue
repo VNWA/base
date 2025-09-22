@@ -6,7 +6,7 @@
         </label>
 
         <!-- Select -->
-        <Select v-model="modelValue" class="w-full">
+        <Select v-model="internalValue" class="w-full">
             <SelectTrigger :class="triggerClasses">
                 <SelectValue placeholder="Select data" />
             </SelectTrigger>
@@ -45,7 +45,7 @@ interface T {
 }
 
 const props = defineProps<{
-    modelValue: number;
+    modelValue?: number | string |null;
     label?: string;
     data_url: string;
     error?: string;
@@ -62,7 +62,9 @@ watch(() => props.modelValue, (val) => {
 });
 
 watch(internalValue, (val) => {
-    emit('update:modelValue', val);
+    if (val) {
+        emit('update:modelValue', val);
+    }
 });
 
 

@@ -13,7 +13,6 @@
         type="button"
         size="xs"
         icon="material-symbols:add"
-        label="Add Images"
       />
     </div>
 
@@ -22,9 +21,10 @@
       v-model="images"
       :options="{ animation: 200, group: 'images' }"
       :class="`grid gap-4 ${gridClass}`"
+        itemKey="index"
     >
       <template #item="{ element: item, index }">
-        <div class="relative cursor-move group">
+        <div class="relative cursor-move group" :key="index">
           <!-- Khung ảnh -->
           <div
             class="w-full aspect-square flex items-center justify-center border rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-800"
@@ -79,7 +79,7 @@ const emit = defineEmits(["update:modelValue"]);
 
 const images = computed({
   get() {
-    return props.modelValue;
+    return props.modelValue ?? []; // luôn trả về []
   },
   set(value) {
     emit("update:modelValue", value);

@@ -178,9 +178,10 @@ import ModalMedia from '../modal/ModalMedia.vue';
 import ModalInsertLink from '../modal/ModalInsertLink.vue';
 import { Icon } from '@iconify/vue';
 import { storage } from '@/lib/utils';
+import { TableKit } from '@tiptap/extension-table'
+
 const activeBtn = "px-2 py-1 rounded border border-purple-500 text-purple-600 bg-purple-100 hover:bg-purple-200 dark:border-purple-400 dark:text-purple-400 dark:bg-purple-900 dark:hover:bg-purple-800 transition"
 const inactiveBtn = "px-2 py-1 rounded border border-gray-300 text-gray-600 bg-white hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900 dark:hover:bg-gray-800 transition"
-
 
 
 const props = defineProps({
@@ -225,7 +226,17 @@ onMounted(() => {
             }),
             Color,
             TextStyle,
-            ImageResize
+            ImageResize,
+            TableKit.configure({
+                table: { resizable: true },
+            }),
+            Image.configure({
+                inline: false,
+                allowBase64: true,
+                HTMLAttributes: {
+                    class: 'rounded-lg',
+                },
+            })
         ],
         content: props.modelValue,
         onUpdate: () => {
