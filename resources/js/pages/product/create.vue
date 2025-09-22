@@ -35,7 +35,11 @@
                         </div>
                         <div class="col-span-5">
                             <Card>
-                                <InputImage v-model="form.url_avatar" :error="form.errors.url_avatar" />
+                                <div class="space-y-4">
+
+                                    <InputImage v-model="form.url_avatar" label="avatar" :error="form.errors.url_avatar" />
+                                    <InputImages v-model="form.images" label="Images" :error="form.errors.images" :grid="3" />
+                                </div>
 
                             </Card>
                         </div>
@@ -65,6 +69,7 @@ import InputFild from '@/components/input/InputFild.vue';
 import InputImage from '@/components/input/InputImage.vue';
 import MetaSeo from '@/components/MetaSeo.vue';
 import TextareaField from '@/components/input/TextareaField.vue';
+import InputImages from '@/Components/input/InputImages.vue';
 const loading = ref(false);
 const form = useForm<Product>({
     brand_id: null,
