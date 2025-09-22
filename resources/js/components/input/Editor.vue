@@ -8,7 +8,7 @@
             :class="textareaClasses">
 
 
-
+        {{ editor }}
             <div v-if="editor" class="p-2 flex flex-wrap items-center gap-2 divide-x">
 
                 <!-- Font Style -->
