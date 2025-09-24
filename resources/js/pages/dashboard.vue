@@ -1,21 +1,15 @@
 <script setup lang="ts">
+import Editor from '@/components/input/Editor.vue';
 import Layout from '@/layouts/Layout.vue';
+import { ref } from 'vue';
 
+const content = ref('');
 </script>
-
 <template>
 
     <Layout title="Dashboard">
 
+        <Editor v-model="content"  />
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        You're logged in!
-                    </div>
-                </div>
-            </div>
-        </div>
     </Layout>
 </template>

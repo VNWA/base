@@ -1,324 +1,141 @@
 @use "sass:string";
-:root {
-    --vnwa-primary: rgb(119, 34, 216);
-    --black: #000;
-    --white: #fff;
-    --gray-2: #ccc;
-    --gray-3: #aaa;
-    --purple-light: #f3e8ff;
-}
 
-.tiptap.ProseMirror-focused {
-    border: none !important;
-    outline: none;
+:root {
+  --vnwa-primary: rgb(119, 34, 216);
+  --black: #000;
+  --white: #fff;
+  --gray-2: #ccc;
+  --gray-3: #aaa;
+  --purple-light: #f3e8ff;
 }
 
 .tiptap {
-    font-size: 1.25rem;
-    padding: 10px;
-    line-height: 1.5;
-    $font-sizes: (
-        h1: 2.5rem,
-        // 40px
-        h2: 2rem,
-        // 32px
-        h3: 1.75rem,
-        // 28px
-        h4: 1.5rem,
-        // 24px
-        h5: 1.25rem,
-        // 20px
-        h6: 1rem,
-        // 16px
-        p: 1rem,
-        // 16px
-        span: 1rem,
-        // 16px
-        small: 0.875rem // 14px
-    );
+  @apply text-base leading-relaxed p-3;
 
-// Tablet size
-$font-sizes-tablet: (
-    h1: 2rem,
-    h2: 1.75rem,
-    h3: 1.5rem,
-    h4: 1.25rem,
-    h5: 1.125rem,
-    h6: 1rem,
-    p: 0.95rem,
-    span: 0.95rem,
-    small: 0.825rem
-);
+  &.ProseMirror-focused {
+    @apply outline-none border-none;
+  }
 
-// Mobile size
-$font-sizes-mobile: (
-    h1: 1.75rem,
-    h2: 1.5rem,
-    h3: 1.25rem,
-    h4: 1.125rem,
-    h5: 1rem,
-    h6: 0.875rem,
-    p: 0.9rem,
-    span: 0.9rem,
-    small: 0.8rem
-);
+  // Headings (tailwind áp dụng là chính)
+  h1 {
+    @apply text-4xl font-bold mb-4;
+  }
+  h2 {
+    @apply text-3xl font-semibold mb-3;
+  }
+  h3 {
+    @apply text-2xl font-medium mb-2;
+  }
+  h4 {
+    @apply text-xl font-medium mb-2;
+  }
+  h5 {
+    @apply text-lg font-medium mb-1;
+  }
+  h6 {
+    @apply text-base font-medium mb-1;
+  }
 
-$breakpoint-tablet: 768px;
-$breakpoint-mobile: 480px;
+  p,
+  span,
+  small {
+    @apply mb-4 leading-7;
+  }
 
-// Style chung
-@each $tag, $size in $font-sizes {
-    #{$tag} {
-        font-size: $size;
-        line-height: 1.5;
-        margin: 0 0 1rem;
-        font-weight: if(string.index($tag, "h")==1, 700, 400);
+  img {
+    @apply block my-4 h-auto max-w-full;
+  }
+
+  // List
+  ul {
+    @apply list-disc ml-6 my-5;
+    li p {
+      @apply my-1;
     }
-}
+  }
 
-// Tablet
-@media (max-width: $breakpoint-tablet) {
-    @each $tag, $size in $font-sizes-tablet {
-        #{$tag} {
-            font-size: $size;
-        }
+  ol {
+    @apply list-decimal ml-6 my-5;
+    li p {
+      @apply my-1;
     }
-}
+  }
 
-// Mobile
-@media (max-width: $breakpoint-mobile) {
-    @each $tag, $size in $font-sizes-mobile {
-        #{$tag} {
-            font-size: $size;
-        }
-    }
-}
+  // Inline code
+  code {
+    @apply bg-neutral-900 text-yellow-300 px-1.5 py-0.5 rounded font-mono text-sm;
+  }
 
-:first-child {
-    margin-top: 0;
-}
+  // Code block
+  pre {
+    @apply bg-neutral-900 text-green-300 p-3 rounded-lg overflow-x-auto font-mono text-sm my-5;
+  }
 
-img {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-}
+  // Highlight
+  mark {
+    @apply bg-yellow-200 rounded px-1;
+  }
 
-ul {
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
-
-    li {
-        list-style-type: disc;
-
-        p {
-            margin: 0.25em 0;
-        }
-    }
-}
-
-ol {
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
-
-    li {
-        list-style-type: decimal;
-
-        p {
-            margin: 0.25em 0;
-        }
-    }
-}
-
-code {
-    background-color: #1e1e1e;
-    color: #ffcb6b;
-    /* màu chữ vàng nhẹ */
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.95em;
-}
-
-/* Nếu bạn có <pre><code> để hiển thị đoạn code dài */
-pre {
-    margin: 1.25rem 0;
-    background-color: #1e1e1e;
-    color: #c3e88d;
-    /* màu chữ xanh nhạt */
-    padding: 12px;
-    border-radius: 6px;
-    overflow-x: auto;
-    font-family: 'Fira Code', 'Courier New', monospace;
-}
-
-mark {
-    background-color: #FAF594;
-    border-radius: 0.4rem;
-    box-decoration-break: clone;
-    padding: 0.1rem 0.3rem;
-}
-
-blockquote {
-    background-color: #1f1f1f;
-    border-left: 4px solid #4fc3f7;
-    /* màu viền xanh nhạt */
-    color: #cccccc;
-    margin: 1em 0;
-    padding: 1em 1.5em;
-    font-style: italic;
-    border-radius: 6px;
-    position: relative;
-
-    p {
-        margin: 0;
-    }
-}
-
-blockquote::before {
+  // Blockquote
+  blockquote {
+    @apply bg-neutral-900 border-l-4 border-sky-400 text-neutral-300 italic rounded-md relative my-4 p-4;
+  }
+  blockquote::before {
     content: "“";
-    font-size: 3em;
-    color: #4fc3f7;
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    font-family: Georgia, serif;
-}
+    @apply text-sky-400 absolute left-2 -top-2 text-5xl font-serif;
+  }
 
+  // HR
+  hr {
+    @apply border-t border-gray-300 my-8;
+  }
 
-hr {
-    border: none;
-    border-top: 1px solid var(--gray-2);
-    margin: 2rem 0;
-}
+  // Link
+  a {
+    @apply underline text-blue-500 hover:text-blue-600;
+  }
 
-img {
-    height: auto;
-    display: block;
-}
+  // Table
+  table {
+    @apply w-full border-collapse text-sm bg-neutral-900 text-gray-100 shadow-md my-5;
+  }
+  thead {
+    @apply bg-neutral-800;
+  }
+  th,
+  td {
+    @apply border border-neutral-700 px-4 py-2 text-left;
+  }
+  tbody tr:nth-child(even) {
+    @apply bg-neutral-800;
+  }
+  tbody tr:hover {
+    @apply bg-neutral-700;
+  }
 
-a {
-    text-decoration: underline;
-}
-
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    margin: 2rem 0 0.75rem;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-
-h1 {
-    font-size: 2.5rem
-}
-
-h2 {
-    font-size: 2rem;
-    color: var(--ui-color-primary-200);
-}
-
-h3 {
-    font-size: 1.75rem
-}
-
-h4 {
-    font-size: 1.5rem
-}
-
-h5 {
-    font-size: 1.25rem
-}
-
-h6,
-span,
-p {
-    font-size: 1.25rem
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
-    color: #f1f1f1;
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
-}
-
-table thead {
-    background-color: #2c2c2c;
-}
-
-table th,
-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border: 1px solid #333;
-}
-
-table tbody tr:nth-child(even) {
-    background-color: #262626;
-}
-
-table tbody tr:hover {
-    background-color: #333;
-}
-
-table button {
-    background-color: #3498db;
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-table button:hover {
-    background-color: #2980b9;
-}
-
-
-@media (max-width: 640px) {
-    header {
-        height: 50px
-    }
-
-    font-size: 1rem;
+  // Responsive
+  @media (max-width: 640px) {
+    @apply text-sm;
 
     h1 {
-        font-size: 1.55rem
+      @apply text-2xl;
     }
-
     h2 {
-        font-size: 1.45rem
+      @apply text-xl;
     }
-
     h3 {
-        font-size: 1.35rem
+      @apply text-lg;
     }
-
     h4 {
-        font-size: 1.25rem
+      @apply text-base;
     }
-
     h5 {
-        font-size: 1.15rem
+      @apply text-sm;
     }
-
     h6,
     span,
     p {
-        font-size: 1rem
+      @apply text-sm;
     }
-
-    img {
-        max-width: 100%;
-    }
-}
-
+  }
 }
