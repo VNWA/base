@@ -1,9 +1,9 @@
 <template>
-    <Card :title="title" :loading="loading" class="overflow-hidden">
+    <Card :title="title" :loading="loading" class="overflow-hidden  shadow-xl shadow-indigo-700 dark:shadow-indigo-200">
       <div class="space-y-4 divide-y divide-gray-200 dark:divide-gray-700">
 
         <!-- Toolbar -->
-        <div v-if="$slots.left_toolbar || $slots.toolbar" class="flex items-center justify-between pb-3">
+        <div v-if="$slots.left_toolbar || $slots.toolbar" class="flex items-center justify-between ">
           <div class="flex items-center gap-4">
             <slot name="left_toolbar"></slot>
           </div>

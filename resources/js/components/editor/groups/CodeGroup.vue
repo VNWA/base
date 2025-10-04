@@ -1,24 +1,19 @@
 <template>
-  <div class="flex items-center gap-2 px-2 py-1">
-    <button
-      type="button"
-      @click="editor?.chain().focus().toggleCode().run()"
-      :disabled="!editor?.can().chain().focus().toggleCode().run()"
-      :class="editor?.isActive('code') ? activeBtn : inactiveBtn"
-    >
-      <Icon icon="fa6-solid:code" class="w-4 h-4" />
-    </button>
-  </div>
+    <div class="flex items-center gap-2 px-2 py-1">
+        <Tooltip text="Code">
+            <Button :active="editor?.isActive('code')" @click="editor?.chain().focus().toggleCode().run()"
+                iconClass="text-lg mx-2" icon="fa6-solid:code" />
+        </Tooltip>
+
+    </div>
 </template>
 
 <script setup lang="ts">
 import { Editor } from "@tiptap/vue-3";
 import { Icon } from "@iconify/vue";
+import Button from "../Button.vue";
+import Tooltip from "@/components/Tooltip.vue";
 
 defineProps<{ editor: Editor | null }>();
 
-const activeBtn =
-  "px-2 py-1 rounded border border-purple-500 text-purple-600 bg-purple-100";
-const inactiveBtn =
-  "px-2 py-1 rounded border border-gray-300 text-gray-600 bg-white";
 </script>

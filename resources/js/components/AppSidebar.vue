@@ -74,6 +74,23 @@ const items = ref<NavItem[]>([
         ]
     },
     {
+        label: 'Pages',
+        icon: 'material-symbols:two-pager-outline',
+        to: route('vnwa.static-page.index'),
+    },
+    {
+        label: 'Appearance',
+        icon: 'material-symbols:layers-outline',
+        childs: [
+            {
+                label: 'Home Page',
+                to: route('vnwa.appearance.view', 'home-page-manager'),
+            },
+
+        ]
+    },
+
+    {
         label: 'Users',
         icon: 'material-symbols:user-attributes',
         to: route('vnwa.user.list'),

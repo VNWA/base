@@ -16,6 +16,7 @@ class ProductCategory extends Model
         'name',
         'slug',
         'description',
+        'content',
         'meta_image',
         'meta_title',
         'meta_desc',

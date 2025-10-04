@@ -10,16 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('product_brands', function (Blueprint $table) {
+        Schema::create('static_pages', function (Blueprint $table) {
             $table->id();
-            $table->text('url_avatar');
-            $table->text('name');
-            $table->text('slug')->unique();
-            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('desc')->nullable();
             $table->longText('content')->nullable();
-            $table->text('meta_image')->nullable();
-            $table->text('meta_title')->nullable();
-            $table->text('meta_desc')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_desc')->nullable();
+            $table->string('meta_image')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_brands');
+        Schema::dropIfExists('static_pages');
     }
 };

@@ -26,7 +26,8 @@ export interface ProductCategory {
     url_avatar: string;
     name: string;
     slug: string;
-    description: string;
+    description?: string;
+    content?: string;
     meta: Meta
     created_at?: string; // hoặc Date nếu bạn convert khi fetch
     updated_at?: string; // hoặc Date
@@ -60,8 +61,8 @@ export interface ProductAppend {
 }
 export interface Product {
     id?: number;
-    brand_id:number | null
-    category_ids:number[]
+    brand_id: number | null
+    category_ids: number[]
     url_avatar: string;
     images: string[];
     sku: string
@@ -71,9 +72,32 @@ export interface Product {
     slug: string
     description?: string
     append: ProductAppend
-    price:number
-    price_old:number
+    price: number
+    price_old: number
     meta: Meta
     created_at?: string; // hoặc Date nếu bạn convert khi fetch
     updated_at?: string; // hoặc Date
+}
+export interface StaticPage {
+    id?: number | null;
+    image?: string;
+    name: string;
+    slug: string;
+    desc?: string;
+    content?: string;
+    meta: Meta
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface Button {
+    label: string;
+    to: string;
+    style: string
+}
+export interface Banner {
+    image: string;
+    title: string;
+    description: string;
+    buttons: Button[];
 }

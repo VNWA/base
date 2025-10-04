@@ -5,7 +5,9 @@
         <AlignGroup :editor="editor" />
         <FontStyleGroup :editor="editor" />
         <CodeGroup :editor="editor" />
-        <!-- <ColorGroup :editor="editor" /> -->
+        <ColorGroup :editor="editor" />
+        <UIBlockGroup :editor="editor" />
+
         <MediaGroup :editor="editor" />
     </div>
 </template>
@@ -19,6 +21,7 @@ import AlignGroup from "./groups/AlignGroup.vue";
 import ColorGroup from "./groups/ColorGroup.vue";
 import ListGroup from "./groups/ListGroup.vue";
 import MediaGroup from "./groups/MediaGroup.vue";
+import UIBlockGroup from "./groups/UIBlockGroup.vue";
 
 defineProps<{
     editor: Editor | null;

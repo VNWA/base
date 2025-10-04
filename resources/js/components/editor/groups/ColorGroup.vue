@@ -2,12 +2,10 @@
     <div class="flex items-center gap-2 px-2 py-1">
         <DropdownMenu>
             <DropdownMenuTrigger as-child>
-                <Button :active="editor?.getAttributes('textStyle').color" :isChild="true">
-                    <Icon icon="material-symbols:format-color-text" class="size-4"
-                        :style="{ color: editor?.getAttributes('textStyle').color || 'inherit' }" />
-                </Button>
-
-
+                <button :active="editor?.getAttributes('textStyle').color" :isChild="true">
+                    <Icon icon="material-symbols:format-color-text" class="size-6 text-gray-500"
+                        :style="editor?.getAttributes('textStyle')" />
+                </button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent class="w-48 p-2">
@@ -50,10 +48,9 @@ import DropdownMenuContent from "../../ui/dropdown-menu/DropdownMenuContent.vue"
 import DropdownMenuLabel from "../../ui/dropdown-menu/DropdownMenuLabel.vue";
 import DropdownMenuSeparator from "../../ui/dropdown-menu/DropdownMenuSeparator.vue";
 import DropdownMenuItem from "../../ui/dropdown-menu/DropdownMenuItem.vue";
-import Button from "../Button.vue";
+import { computed } from "vue";
 
 const props = defineProps<{ editor: Editor | null }>();
-
 const colors = [
     { label: "Purple", value: "#958DF1" },
     { label: "Red", value: "#F98181" },

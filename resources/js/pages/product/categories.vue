@@ -2,7 +2,7 @@
     <Layout title="Product Categories">
         <div class="p-5">
             <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-4">
+                <div class="lg:col-span-4 col-span-12">
                     <Card title="Categories" :loading="isLoading">
                         <template #header>
                             <Button label="Create" icon="radix-icons:plus" @click="showFormCreate()" color="gray"
@@ -15,7 +15,7 @@
                                     :class="{ 'font-bold': form.id === node.id }">
 
                                     <div @click="showFormEdit(node.id)"> {{ node.name }} ({{ node.children.length
-                                        }})</div>
+                                    }})</div>
                                     <button v-if="form.id === node.id" @click="showFormDelete(node.id, node.name)"
                                         class="bg-red-500 hover:bg-red-600 px-2 py-1 text-white rounded-md">
                                         <Icon icon="radix-icons:trash" />
@@ -41,6 +41,7 @@
                                 <InputImage v-model="form.url_avatar" :error="form.errors.url_avatar" />
                                 <TextareaField v-model="form.description" label="description"
                                     :error="form.errors.description" />
+                                <Editor v-model="form.content" label="content" :error="form.errors.content" />
 
                                 <MetaSeo v-model="form.meta" />
                             </div>
@@ -61,6 +62,7 @@
 <script lang="ts" setup>
 import Button from '@/components/Button.vue';
 import Card from '@/components/Card.vue';
+import Editor from '@/components/input/Editor.vue';
 import InputFild from '@/components/input/InputFild.vue';
 import InputImage from '@/components/input/InputImage.vue';
 import TextareaField from '@/components/input/TextareaField.vue';
@@ -87,6 +89,7 @@ const form = useForm<ProductCategory>({
     name: '',
     slug: '',
     description: '',
+    content: '',
     meta: {
         title: '',
         desc: '',
@@ -147,6 +150,7 @@ const showFormEdit = (id: number) => {
             form.name = response.data.name;
             form.slug = response.data.slug;
             form.description = response.data.description;
+            form.content = response.data.content;
             form.meta.title = response.data.meta_title || '';
             form.meta.desc = response.data.meta_desc || '';
             form.meta.image = response.data.meta_image || '';

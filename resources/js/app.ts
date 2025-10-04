@@ -1,4 +1,5 @@
 import '../css/app.css';
+import '../css/vnwa.scss';
 import './bootstrap';
 import 'vue-final-modal/style.css'
 import { createInertiaApp } from '@inertiajs/vue3';

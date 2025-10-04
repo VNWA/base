@@ -9,9 +9,17 @@ export default {
     './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
     './storage/framework/views/*.php',
     './resources/views/**/*.blade.php',
-    './resources/js/**/*.vue',
+  './resources/js/**/*.{vue,js,ts}', // thêm ts ở đây
+  './resources/ts/**/*.{js,ts}',
   ],
-
+  safelist: [
+    {
+      pattern: /grid-cols-(1|2|3|4|5|6|7|8|9|10|11|12)/,
+    },
+    {
+      pattern: /lg:grid-cols-(1|2|3|4|5|6|7|8|9|10|11|12)/,
+    },
+  ],
   theme: {
     extend: {
       fontFamily: {

@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\AppearanceController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\MediaController;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +17,7 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
 
     Route::middleware('guest')->group(function () {
         Route::prefix('auth')->controller(AuthController::class)->name('auth.')->group(function () {
-            Route::get('/login', fn () => Inertia::render('login'))->name('login');
+            Route::get('/login', fn() => Inertia::render('login'))->name('login');
             Route::post('/login', 'login')->name('login');
 
         });
@@ -22,7 +25,7 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
 
     Route::middleware('admin')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-        Route::get('/', fn () => Inertia::render('dashboard'))->name('dashboard');
+        Route::get('/', fn() => Inertia::render('dashboard'))->name('dashboard');
         Route::prefix('media')->name('media.')->controller(MediaController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/load-data', 'loadData')->name('load-data');
@@ -33,8 +36,28 @@ Route::prefix('vnwa')->name('vnwa.')->group(function () {
             Route::post('/rename', 'rename')->name('rename');
         });
 
+        Route::prefix('appearance')->controller(AppearanceController::class)->name('appearance.')->group(function () {
+            Route::get('/{page}', fn($page) => Inertia::render('appearance/' . $page))->name('view');
+            Route::get('/{type}/load-data', [AppearanceController::class, 'loadData']);
+            Route::post('/{type}/update', [AppearanceController::class, 'update']);
+        });
+        Route::prefix('setting')->group(function () {
+
+            Route::get('/{type}/load-data', [SettingController::class, 'loadData']);
+            Route::post('/{type}/update', [SettingController::class, 'update']);
+        });
+        Route::prefix('static-page')->controller(StaticPageController::class)->name('static-page.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/detail-{id}', 'detail')->name('detail');
+            Route::post('/list', 'list')->name('list');
+            Route::post('/store', 'store')->name('store');
+            Route::post('/update-{id}', 'update')->name('update');
+            Route::post('delete', 'delete')->name('delete');
+        });
+
+
         Route::prefix('user')->name('user.')->controller(UserController::class)->group(function () {
-            Route::get('/', fn () => Inertia::render('dashboard'))->name('list');
+            Route::get('/', fn() => Inertia::render('dashboard'))->name('list');
         });
         Route::prefix('product')->name('product.')->group(function () {
             Route::prefix('/')->controller(ProductController::class)->group(function () {

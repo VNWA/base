@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('slug')->unique();
             $table->mediumText('description')->nullable();
+            $table->longText('content')->nullable();
             $table->text('meta_image')->nullable();
             $table->text('meta_title')->nullable();
             $table->text('meta_desc')->nullable();

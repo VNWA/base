@@ -1,0 +1,193 @@
+.vnwa_button {
+
+    // ---------- Gradient Button ----------
+    .button1 {
+      padding: 10px 20px;
+
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #fff;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    // ---------- Ghost Button ----------
+    .button2 {
+      padding: 10px 20px;
+
+      font-weight: 600;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+      color: #2575fc;
+      border-image: linear-gradient(45deg, #6a11cb, #2575fc);
+      border-image-slice: 1;
+
+      &:hover {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+        color: #fff;
+      }
+    }
+
+    // ---------- Neon Shadow Button ----------
+    .button3 {
+      padding: 10px 20px;
+
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      background-color: #1f1f1f;
+      box-shadow: 0 0 10px #2575fc, 0 0 20px #6a11cb;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 0 20px #2575fc, 0 0 40px #6a11cb;
+        transform: scale(1.05);
+      }
+    }
+
+    // ---------- Flat Color Buttons ----------
+    .button4 {
+      padding: 10px 20px;
+
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      background-color: #f44336; // Red
+
+      &:hover {
+        background-color: #d32f2f;
+      }
+    }
+
+    .button5 {
+      @extend .button4;
+      background-color: #4caf50; // Green
+
+      &:hover {
+        background-color: #388e3c;
+      }
+    }
+
+    .button6 {
+      @extend .button4;
+      background-color: #ff9800; // Orange
+
+      &:hover {
+        background-color: #f57c00;
+      }
+    }
+
+    .button7 {
+      @extend .button4;
+      background-color: #2196f3; // Blue
+
+      &:hover {
+        background-color: #1976d2;
+      }
+    }
+
+    // ---------- Outline Buttons ----------
+    .button8 {
+      padding: 10px 20px;
+
+      font-weight: 600;
+      border: 2px solid #2196f3;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: transparent;
+      color: #2196f3;
+
+      &:hover {
+        background-color: #2196f3;
+        color: #fff;
+      }
+    }
+
+    .button9 {
+      padding: 10px 20px;
+
+      font-weight: 600;
+      border: 2px solid #4caf50;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: transparent;
+      color: #4caf50;
+
+      &:hover {
+        background-color: #4caf50;
+        color: #fff;
+      }
+    }
+    .button10 {
+        padding: 10px 20px;
+
+        font-weight: 600;
+        border: 2px solid #000;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #fff;
+        color: #000;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+      }
+
+      // Thêm màu đen nền chữ trắng
+      .button11 {
+        padding: 10px 20px;
+
+        font-weight: 600;
+        border: 2px solid #000;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #000;
+        color: #fff;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #222;
+        }
+      }
+
+      // Thêm màu xám bình thường (secondary)
+      .button12 {
+        padding: 10px 20px;
+
+        font-weight: 600;
+        border: 2px solid #aaa;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #e0e0e0;
+        color: #333;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #d5d5d5;
+        }
+      }
+  }

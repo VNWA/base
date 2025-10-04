@@ -1,26 +1,34 @@
 <template>
-  <div class="flex items-center gap-2 px-2 py-1">
-    <Tooltip text="Add Link">
-      <button
-        type="button"
-        @click="openLinkModal"
-        class="px-2 py-1 rounded border bg-blue-100 text-blue-600 hover:bg-blue-200"
-      >
-        <Icon icon="material-symbols:add-link" class="w-4 h-4" />
-      </button>
-    </Tooltip>
-    <Tooltip text="Add Image">
-      <button
-        type="button"
-        @click="openImageModal"
-        class="px-2 py-1 rounded border bg-purple-100 text-purple-600 hover:bg-purple-200 flex items-center gap-2"
-      >
-        <Icon icon="material-symbols:folder-managed" class="w-4 h-4" />
-        VMedia
-      </button>
-    </Tooltip>
-  </div>
-</template>
+    <div class="flex items-center gap-2 px-2 py-1">
+      <Tooltip text="Add Link">
+        <button
+          type="button"
+          @click="openLinkModal"
+          class="px-2 py-1 rounded border flex items-center gap-1
+                 hover:bg-gray-100 dark:hover:bg-gray-800
+                 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+        >
+          <Icon icon="material-symbols:add-link" class="w-4 h-4" />
+          URL
+        </button>
+      </Tooltip>
+
+      <Tooltip text="Add Image">
+        <button
+          type="button"
+          @click="openImageModal"
+          class="px-2 py-1 rounded border flex items-center gap-2
+                 hover:bg-gray-100 dark:hover:bg-gray-800
+                 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+        >
+          <Icon icon="material-symbols:folder-managed" class="w-4 h-4" />
+          VMedia
+        </button>
+      </Tooltip>
+    </div>
+  </template>
+
+
 
 <script setup lang="ts">
 import { Editor } from "@tiptap/vue-3";
